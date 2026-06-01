@@ -1,0 +1,8 @@
+.git
+.venv
+.pytest_cache
+.decision_os
+__pycache__
+*.pyc
+.env
+web-server.log

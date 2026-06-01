@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
@@ -155,7 +156,9 @@ app = Starlette(
 def main() -> None:
     import uvicorn
 
-    uvicorn.run("ai_decision_os.web:app", host="127.0.0.1", port=8000, reload=False)
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("ai_decision_os.web:app", host=host, port=port, reload=False)
 
 
 if __name__ == "__main__":
