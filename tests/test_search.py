@@ -7,3 +7,7 @@ def test_clean_api_key_strips_quotes_and_spaces() -> None:
     assert _clean_api_key(' "tvly-test" ') == "tvly-test"
     assert _clean_api_key(" 'tvly-test' ") == "tvly-test"
     assert _clean_api_key(None) == ""
+
+
+def test_clean_api_key_strips_newlines() -> None:
+    assert _clean_api_key("\ntvly-test\r\n") == "tvly-test"

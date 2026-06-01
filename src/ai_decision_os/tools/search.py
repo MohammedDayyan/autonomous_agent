@@ -17,6 +17,37 @@ async def search_web(query: str, limit: int = 5) -> list[dict[str, str]]:
     return await _search_duckduckgo(query, limit)
 
 
+async def tavily_diagnostics() -> dict[str, object]:
+    load_dotenv()
+    tavily_api_key = _clean_api_key(os.getenv("TAVILY_API_KEY"))
+    if not tavily_api_key:
+        return {"configured": False, "ok": False, "reason": "TAVILY_API_KEY is not set."}
+
+    try:
+        async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
+            response = await client.get(
+                "https://api.tavily.com/usage",
+                headers={"Authorization": f"Bearer {tavily_api_key}"},
+            )
+        detail = ""
+        if response.status_code >= 400:
+            detail = response.text[:300]
+        return {
+            "configured": True,
+            "ok": response.status_code == 200,
+            "status_code": response.status_code,
+            "key_prefix": tavily_api_key[:8],
+            "detail": detail,
+        }
+    except Exception as exc:
+        return {
+            "configured": True,
+            "ok": False,
+            "key_prefix": tavily_api_key[:8],
+            "error": str(exc),
+        }
+
+
 def tavily_configured() -> bool:
     load_dotenv()
     return bool(_clean_api_key(os.getenv("TAVILY_API_KEY")))
@@ -50,7 +81,7 @@ async def _search_tavily(query: str, limit: int, api_key: str) -> list[dict[str,
         return [
             {
                 "title": "Tavily search unavailable",
-                "url": f"https://duckduckgo.com/?q={quote_plus(query)}",
+                "url": "https://tavily.com",
                 "snippet": f"Tavily search failed: {exc}",
             }
         ]
