@@ -10,11 +10,20 @@ from dotenv import load_dotenv
 async def search_web(query: str, limit: int = 5) -> list[dict[str, str]]:
     """Search with Tavily when configured, then fall back to DuckDuckGo Instant Answer."""
     load_dotenv()
-    tavily_api_key = os.getenv("TAVILY_API_KEY")
+    tavily_api_key = _clean_api_key(os.getenv("TAVILY_API_KEY"))
     if tavily_api_key:
         return await _search_tavily(query, limit, tavily_api_key)
 
     return await _search_duckduckgo(query, limit)
+
+
+def tavily_configured() -> bool:
+    load_dotenv()
+    return bool(_clean_api_key(os.getenv("TAVILY_API_KEY")))
+
+
+def _clean_api_key(value: str | None) -> str:
+    return (value or "").strip().strip('"').strip("'").strip()
 
 
 async def _search_tavily(query: str, limit: int, api_key: str) -> list[dict[str, str]]:
@@ -37,6 +46,7 @@ async def _search_tavily(query: str, limit: int, api_key: str) -> list[dict[str,
             response.raise_for_status()
         data = response.json()
     except Exception as exc:
+        print(f"Tavily search failed for query={query!r}: {exc}", flush=True)
         return [
             {
                 "title": "Tavily search unavailable",

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ai-decision-os
+    runtime: docker
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: DECISION_OS_DATA_DIR
+        value: /data/.decision_os

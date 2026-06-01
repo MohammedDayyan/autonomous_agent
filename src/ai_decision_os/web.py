@@ -14,6 +14,7 @@ from starlette.staticfiles import StaticFiles
 
 from ai_decision_os.agent import DecisionAgent
 from ai_decision_os.config import load_settings
+from ai_decision_os.tools.search import tavily_configured
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "web_static"
@@ -33,6 +34,10 @@ def to_jsonable(value: Any) -> Any:
 
 async def homepage(_request) -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
+
+
+async def health(_request) -> JSONResponse:
+    return JSONResponse({"ok": True, "tavily_configured": tavily_configured()})
 
 
 async def run_agent(request) -> JSONResponse:
@@ -143,6 +148,7 @@ app = Starlette(
     debug=False,
     routes=[
         Route("/", homepage),
+        Route("/health", health),
         Route("/api/run", run_agent, methods=["POST"]),
         Route("/api/run-stream", stream_agent),
         Route("/api/reports", list_reports),
