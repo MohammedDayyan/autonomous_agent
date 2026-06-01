@@ -1,0 +1,40 @@
+[project]
+name = "ai-decision-os"
+version = "0.1.0"
+description = "An MCP-powered Reason -> Research -> Execute agent using Groq, tools, reports, and local memory."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "httpx>=0.28.0",
+  "mcp>=1.20.0",
+  "playwright>=1.50.0",
+  "pydantic>=2.10.0",
+  "python-dotenv>=1.0.0",
+  "starlette>=0.40.0",
+  "uvicorn>=0.30.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+decision-os = "ai_decision_os.cli:main"
+decision-os-mcp = "ai_decision_os.mcp_server:main"
+decision-os-web = "ai_decision_os.web:main"
+decision-os-benchmark = "ai_decision_os.benchmark:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ai_decision_os = ["web_static/*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

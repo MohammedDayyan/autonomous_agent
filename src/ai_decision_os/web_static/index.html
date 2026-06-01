@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Decision OS</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace">
+        <aside class="rail" aria-label="System status">
+          <div class="brand">
+            <div class="mark">AI</div>
+            <div>
+              <strong>Decision OS</strong>
+              <span>Reason / Research / Execute</span>
+            </div>
+          </div>
+
+          <div class="status-card">
+            <span class="label">Transport</span>
+            <strong id="activeTransport">MCP client</strong>
+            <p id="transportCopy">Agent calls tools through the MCP server.</p>
+          </div>
+
+          <div class="status-card">
+            <span class="label">Latest Report</span>
+            <strong id="latestReport">None yet</strong>
+            <button id="refreshReports" class="ghost-button" type="button">Refresh</button>
+          </div>
+        </aside>
+
+        <section class="console">
+          <div class="topbar">
+            <div>
+              <p class="eyebrow">Agent Control</p>
+              <h1>AI Decision OS</h1>
+            </div>
+            <div class="segmented" role="radiogroup" aria-label="Tool transport">
+              <label>
+                <input type="radio" name="transport" value="mcp" checked />
+                <span>MCP</span>
+              </label>
+              <label>
+                <input type="radio" name="transport" value="direct" />
+                <span>Direct</span>
+              </label>
+            </div>
+          </div>
+
+          <form id="goalForm" class="goal-form">
+            <label for="goalInput">Goal</label>
+            <textarea id="goalInput" name="goal" rows="4">Find top open-source AI agents on GitHub and save a report</textarea>
+            <section id="goalAnswer" class="goal-answer" hidden>
+              <div class="answer-head">
+                <span class="label">Answer</span>
+                <button class="ghost-button" type="button" id="clearAnswer">Clear</button>
+              </div>
+              <pre id="answerPreview">Run a goal to see the answer here.</pre>
+            </section>
+            <div class="form-actions">
+              <button class="primary-button" type="submit">
+                <span>Run Agent</span>
+              </button>
+              <button class="ghost-button" type="button" id="sampleButton">Load Sample</button>
+            </div>
+          </form>
+
+          <div class="run-strip">
+            <div>
+              <span class="label">Run State</span>
+              <strong id="runState">Idle</strong>
+            </div>
+            <div>
+              <span class="label">Tools</span>
+              <strong id="toolCount">0</strong>
+            </div>
+            <div>
+              <span class="label">Success</span>
+              <strong id="successCount">0</strong>
+            </div>
+          </div>
+
+          <section class="panels">
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Plan</h2>
+                <span id="planBadge">Waiting</span>
+              </div>
+              <ol id="planList" class="timeline"></ol>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <h2>Results</h2>
+                <span id="resultBadge">No run</span>
+              </div>
+              <div id="resultsList" class="results-empty">Run a goal to see tool output.</div>
+            </article>
+          </section>
+        </section>
+
+        <aside class="reports">
+          <div class="panel-head">
+            <h2>Reports</h2>
+          </div>
+          <div id="reportList" class="report-list"></div>
+          <div id="reportPreview" class="report-preview">Select a report to preview it.</div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/static/app.js?v=answer-agent-20260529b"></script>
+  </body>
+</html>
