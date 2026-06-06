@@ -87,6 +87,22 @@ Expected:
 }
 ```
 
+If `tavily_configured` is `false`, the running Render service does not see your Tavily key. Open the service's **Environment** page and confirm the key is named exactly:
+
+```text
+TAVILY_API_KEY
+```
+
+The app also accepts `TRAVILY_API_KEY` as a compatibility fallback, but `TAVILY_API_KEY` is the correct name to use.
+
+For deeper search diagnostics, open:
+
+```text
+https://your-service.onrender.com/health/search?q=Cristiano%20Ronaldo%20GOAT
+```
+
+The `provider` field should be `tavily`. If it is `duckduckgo`, the key is still missing from the deployed service environment.
+
 Then open the main app and run:
 
 ```text
@@ -104,5 +120,6 @@ You should see:
 ## Notes
 
 - First build can take several minutes because the Dockerfile installs Chromium for Playwright.
+- If `extract_page` reports a missing Playwright executable under `/root/.cache/ms-playwright`, the service is probably not running from this Dockerfile or the Docker build did not run after the Playwright install step was added. Redeploy as a Docker web service from the latest commit.
 - If the image becomes too large or builds are slow, remove Playwright extraction or switch `extract_page` to a lighter HTTP-only reader.
 - For production, consider moving SQLite to Render Postgres and report files to object storage.

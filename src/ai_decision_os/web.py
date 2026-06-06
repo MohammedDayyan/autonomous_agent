@@ -14,7 +14,7 @@ from starlette.staticfiles import StaticFiles
 
 from ai_decision_os.agent import DecisionAgent
 from ai_decision_os.config import load_settings
-from ai_decision_os.tools.search import tavily_configured, tavily_diagnostics
+from ai_decision_os.tools.search import search_diagnostics, tavily_configured, tavily_diagnostics
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "web_static"
@@ -42,6 +42,11 @@ async def health(_request) -> JSONResponse:
 
 async def tavily_health(_request) -> JSONResponse:
     return JSONResponse(await tavily_diagnostics())
+
+
+async def search_health(request) -> JSONResponse:
+    query = str(request.query_params.get("q", "Model Context Protocol")).strip() or "Model Context Protocol"
+    return JSONResponse(await search_diagnostics(query))
 
 
 async def run_agent(request) -> JSONResponse:
@@ -154,6 +159,7 @@ app = Starlette(
         Route("/", homepage),
         Route("/health", health),
         Route("/health/tavily", tavily_health),
+        Route("/health/search", search_health),
         Route("/api/run", run_agent, methods=["POST"]),
         Route("/api/run-stream", stream_agent),
         Route("/api/reports", list_reports),
