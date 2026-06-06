@@ -23,19 +23,23 @@ class MCPToolClient:
     async def __aenter__(self) -> MCPToolClient:
         self._stack = AsyncExitStack()
         self._errlog = open(os.devnull, "w", encoding="utf-8")
-        server = StdioServerParameters(
-            command=sys.executable,
-            args=["-m", "ai_decision_os.mcp_server"],
-            cwd=str(self.cwd),
-        )
         read_stream, write_stream = await self._stack.enter_async_context(
-            stdio_client(server, errlog=self._errlog)
+            stdio_client(self._server_parameters(), errlog=self._errlog)
         )
         self._session = await self._stack.enter_async_context(
             ClientSession(read_stream, write_stream)
         )
         await self._session.initialize()
         return self
+
+    def _server_parameters(self) -> StdioServerParameters:
+        server = StdioServerParameters(
+            command=sys.executable,
+            args=["-m", "ai_decision_os.mcp_server"],
+            cwd=str(self.cwd),
+            env=os.environ.copy(),
+        )
+        return server
 
     async def __aexit__(self, exc_type: object, exc: object, tb: object) -> None:
         if self._stack is not None:

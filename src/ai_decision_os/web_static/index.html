@@ -21,8 +21,8 @@
 
           <div class="status-card">
             <span class="label">Transport</span>
-            <strong id="activeTransport">MCP client</strong>
-            <p id="transportCopy">Agent calls tools through the MCP server.</p>
+            <strong id="activeTransport">Direct calls</strong>
+            <p id="transportCopy">Agent calls local tool functions in-process.</p>
           </div>
 
           <div class="status-card">
@@ -40,11 +40,11 @@
             </div>
             <div class="segmented" role="radiogroup" aria-label="Tool transport">
               <label>
-                <input type="radio" name="transport" value="mcp" checked />
+                <input type="radio" name="transport" value="mcp" />
                 <span>MCP</span>
               </label>
               <label>
-                <input type="radio" name="transport" value="direct" />
+                <input type="radio" name="transport" value="direct" checked />
                 <span>Direct</span>
               </label>
             </div>
@@ -112,6 +112,6 @@
       </section>
     </main>
 
-    <script src="/static/app.js?v=answer-agent-20260529b"></script>
+    <script src="/static/app.js?v=transport-default-20260606"></script>
   </body>
 </html>

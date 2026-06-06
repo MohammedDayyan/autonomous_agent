@@ -103,6 +103,23 @@ https://your-service.onrender.com/health/search?q=Cristiano%20Ronaldo%20GOAT
 
 The `provider` field should be `tavily`. If it is `duckduckgo`, the key is still missing from the deployed service environment.
 
+The app's UI defaults to `Direct` transport for hosted deployments. If you choose `MCP`, the MCP subprocess must inherit the Render environment; this repo now passes the environment explicitly.
+
+To verify the running container itself, open:
+
+```text
+https://your-service.onrender.com/health/runtime
+```
+
+Expected values include:
+
+```json
+{
+  "tavily_api_key_present": true,
+  "playwright_browsers_path": "/ms-playwright"
+}
+```
+
 Then open the main app and run:
 
 ```text

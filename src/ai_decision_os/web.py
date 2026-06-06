@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import sys
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
@@ -47,6 +48,24 @@ async def tavily_health(_request) -> JSONResponse:
 async def search_health(request) -> JSONResponse:
     query = str(request.query_params.get("q", "Model Context Protocol")).strip() or "Model Context Protocol"
     return JSONResponse(await search_diagnostics(query))
+
+
+async def runtime_health(_request) -> JSONResponse:
+    return JSONResponse(
+        {
+            "ok": True,
+            "python": sys.version.split()[0],
+            "tavily_api_key_present": bool(os.getenv("TAVILY_API_KEY")),
+            "travily_api_key_present": bool(os.getenv("TRAVILY_API_KEY")),
+            "playwright_browsers_path": os.getenv("PLAYWRIGHT_BROWSERS_PATH"),
+            "decision_os_data_dir": os.getenv("DECISION_OS_DATA_DIR"),
+            "render": {
+                "service_name": os.getenv("RENDER_SERVICE_NAME"),
+                "git_branch": os.getenv("RENDER_GIT_BRANCH"),
+                "git_commit": os.getenv("RENDER_GIT_COMMIT"),
+            },
+        }
+    )
 
 
 async def run_agent(request) -> JSONResponse:
@@ -160,6 +179,7 @@ app = Starlette(
         Route("/health", health),
         Route("/health/tavily", tavily_health),
         Route("/health/search", search_health),
+        Route("/health/runtime", runtime_health),
         Route("/api/run", run_agent, methods=["POST"]),
         Route("/api/run-stream", stream_agent),
         Route("/api/reports", list_reports),
